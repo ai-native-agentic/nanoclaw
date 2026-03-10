@@ -1,0 +1,15 @@
+# .harness/config.yaml — nanoclaw QA gate configuration
+# Delegates to native TypeScript/Node.js toolchain.
+# NOT a Python harness — nanoclaw is TypeScript (ESM).
+
+project: nanoclaw
+language: typescript
+
+# Gate enable/disable
+gates:
+  gate_a: true   # format check (prettier)
+  gate_b: true   # type check (tsc)
+  gate_c: true   # unit tests (vitest)
+  gate_d: false  # e2e / integration tests (require real credentials)
+  gate_e: false  # unused
+  gate_f: false  # unused
