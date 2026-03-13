@@ -12,30 +12,32 @@ Stack: Node.js 20+, TypeScript, SQLite, pino, better-sqlite3, YAML, Zod
 
 ## STRUCTURE
 
-```
-.
-├── src/                     # Core system (single process)
-│   ├── index.ts             # Orchestrator: state, message loop, agent invocation
-│   ├── channels/            # Channel registry (self-registration)
-│   ├── container-runner.ts  # Spawns agent containers with mounts
-│   ├── container-runtime.ts # Container backend abstraction
-│   ├── router.ts            # Message formatting + outbound routing
-│   ├── ipc.ts               # IPC watcher + task processing
-│   ├── task-scheduler.ts    # Cron job scheduler
-│   ├── db.ts                # SQLite operations
-│   └── mount-security.ts    # Filesystem mount validation
-├── container/               # Agent container definition
-│   ├── skills/              # Agent-side tools (browser, etc.)
-│   └── build.sh             # Container build script
-├── groups/{name}/           # Per-group isolated state
-│   ├── CLAUDE.md            # Group memory (isolated)
-│   └── files/               # Group-specific files
-├── .claude/                 # Claude Code skills
-│   └── skills/              # Skill definitions
-├── skills-engine/           # Skill execution engine
-├── setup/                   # Initial setup flow
-└── scripts/                 # Management scripts
-```
+nanoclaw/
+├── assets/
+├── config-examples/
+├── container/
+│   ├── agent-runner/
+│   ├── skills/
+├── docs/
+├── groups/
+│   ├── global/
+│   └── main/
+├── launchd/
+├── repo-tokens/
+│   ├── examples/
+│   └── README.md
+├── scripts/
+├── setup/
+│   ├── index.ts
+├── skills-engine/
+│   ├── __tests__/
+│   ├── index.ts
+├── src/
+│   ├── channels/
+│   ├── index.ts
+├── AGENTS.md
+├── README.md
+├── package.json
 
 ## WHERE TO LOOK
 
@@ -115,32 +117,18 @@ export const whatsappChannel: Channel = {
 ## COMMANDS
 
 ```bash
-# Development
-npm run dev              # Run with hot reload
-npm run build            # Compile TypeScript
-npm run test             # Run vitest
-npm run format           # Prettier
-
-# Container
-./container/build.sh     # Rebuild agent container
-# Force clean rebuild: prune buildkit + re-run build.sh
-
-# Service management (macOS launchd)
-launchctl load ~/Library/LaunchAgents/com.nanoclaw.plist
-launchctl unload ~/Library/LaunchAgents/com.nanoclaw.plist
-launchctl kickstart -k gui/$(id -u)/com.nanoclaw
-
-# Service management (Linux systemd)
-systemctl --user start nanoclaw
-systemctl --user restart nanoclaw
-systemctl --user stop nanoclaw
-
-# Setup
-npm run setup            # First-time configuration
-npm run auth             # WhatsApp QR authentication
-
-# Skills
-npx tsx scripts/apply-skill.ts .claude/skills/{skill-name}
+pnpm auth                           # tsx src/whatsapp-auth.ts
+pnpm build                           # tsc
+pnpm dev                           # tsx src/index.ts
+pnpm format                           # prettier --write "src/**/*.ts"
+pnpm format:check                           # prettier --check "src/**/*.ts"
+pnpm format:fix                           # prettier --write "src/**/*.ts"
+pnpm prepare                           # husky
+pnpm setup                           # tsx setup/index.ts
+pnpm start                           # node dist/index.js
+pnpm test                           # vitest run
+pnpm test:watch                           # vitest
+pnpm typecheck                           # tsc --noEmit
 ```
 
 ## NOTES
